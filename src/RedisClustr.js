@@ -73,6 +73,7 @@ RedisClustr.prototype.getClient = function(port, host, master) {
   cli.master = master;
 
   cli.on('error', function(err) {
+    console.log(err);
     if (
       err.code === 'CONNECTION_BROKEN' ||
       err.code === 'UNCERTAIN_STATE' ||
