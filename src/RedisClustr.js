@@ -692,7 +692,9 @@ RedisClustr.prototype._subscribe = function(cmd, args) {
 
   self.parseArgs(args, function(_, args, cb) {
     var cli = self.subscribeClient;
+    console.log(cli, 'cli first man');
     if (!cli) cli = self.subscribeAll();
+    console.log(cli, 'cli man');
     if (!cli) return cb(new Error('couldn\'t get subscriber client'));
 
     var del = cmd === 'unsubscribe' || cmd === 'punsubscribe';
