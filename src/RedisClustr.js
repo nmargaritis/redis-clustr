@@ -562,9 +562,9 @@ RedisClustr.prototype.subscribeAll = function(exclude) {
 
   // duplicate the random connection and make that our subscriber client
   var cli = self.subscribeClient = self.createClient(con.connection_options.port, con.connection_options.host);
-
+  console.log(cli, 'cliiiiii');
   cli.on('error', function(err) {
-    console.log(err);
+    console.error(err);
     if (
       err.code === 'CONNECTION_BROKEN' ||
       err.code === 'UNCERTAIN_STATE' ||
