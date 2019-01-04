@@ -187,7 +187,7 @@ RedisClustr.prototype.getSlots = function(cb) {
 
     client.cluster('slots', function(err, slots) {
       if (err) {
-        console.log(err);
+        console.error(err);
         // exclude this client from then next attempt
         exclude.push(client.address);
         if (!tryErrors) tryErrors = [];
