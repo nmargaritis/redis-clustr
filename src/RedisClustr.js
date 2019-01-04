@@ -133,8 +133,8 @@ RedisClustr.prototype.getRandomConnection = function(exclude) {
     return self.connections[f] && self.connections[f].ready && (!exclude || exclude.indexOf(f) === -1);
   });
   var randomIndex = Math.floor(Math.random() * available.length);
-  console.log('connections 1o1', self.connections);
-  console.log(available);
+  console.log(available[randomIndex]);
+  console.log(self.connections[available[randomIndex]]);
   return self.connections[available[randomIndex]];
 };
 
@@ -557,14 +557,16 @@ RedisClustr.prototype.subscribeAll = function(exclude) {
   }
 
   var con = self.getRandomConnection(exclude);
+  console.log('client con', con);
   if (!con) {
+    console.log('here without the con');
+    console.log('is ready', !self.ready);
     if (!self.ready) self.wait('ready', self.subscribeAll.bind(self, exclude));
     return false;
   }
 
   // duplicate the random connection and make that our subscriber client
   var cli = self.subscribeClient = self.createClient(con.connection_options.port, con.connection_options.host);
-  console.log(cli, 'cliiiiii');
   cli.on('error', function(err) {
     console.error(err);
     if (
@@ -694,9 +696,7 @@ RedisClustr.prototype._subscribe = function(cmd, args) {
 
   self.parseArgs(args, function(_, args, cb) {
     var cli = self.subscribeClient;
-    console.log(cli, 'cli first man');
     if (!cli) cli = self.subscribeAll();
-    console.log(cli, 'cli man');
     if (!cli) return cb(new Error('couldn\'t get subscriber client'));
 
     var del = cmd === 'unsubscribe' || cmd === 'punsubscribe';
