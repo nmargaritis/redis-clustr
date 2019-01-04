@@ -127,11 +127,11 @@ RedisClustr.prototype.getClient = function(port, host, master) {
  */
 RedisClustr.prototype.getRandomConnection = function(exclude) {
   var self = this;
-
+  console.log(self.connections);
   var available = Object.keys(self.connections).filter(function(f) {
     return self.connections[f] && self.connections[f].ready && (!exclude || exclude.indexOf(f) === -1);
   });
-
+  console.log(available);
   var randomIndex = Math.floor(Math.random() * available.length);
 
   return self.connections[available[randomIndex]];
