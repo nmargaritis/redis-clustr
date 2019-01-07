@@ -134,7 +134,7 @@ RedisClustr.prototype.getRandomConnection = function(exclude) {
   });
   var randomIndex = Math.floor(Math.random() * available.length);
   console.log(available[randomIndex]);
-  console.log(self.connections[available[randomIndex]]);
+  console.log(typeof self.connections[available[randomIndex]]);
   return self.connections[available[randomIndex]];
 };
 
@@ -180,6 +180,7 @@ RedisClustr.prototype.getSlots = function(cb) {
     if (self.quitting) return runCbs(new Error('cluster is quitting'));
 
     var client = self.getRandomConnection(exclude);
+    console.log('We are taking the redis slots and client', typeof client);
     if (!client) {
       var err = new Error('couldn\'t get slot allocation');
       err.errors = tryErrors;
@@ -231,7 +232,7 @@ RedisClustr.prototype.getSlots = function(cb) {
       if (!self.ready) {
         self.ready = true;
         self.emit('ready');
-        console.log('emmiting ready bro');
+        console.log('Emmiting ready bro');
       }
 
       if (!self.fullReady) {
@@ -242,6 +243,7 @@ RedisClustr.prototype.getSlots = function(cb) {
             if (++ready === seenClients.length) {
               self.fullReady = true;
               self.emit('fullReady');
+              console.log('Emmiting full ready bro');
             }
             continue;
           }
@@ -557,18 +559,19 @@ RedisClustr.prototype.subscribeAll = function(exclude) {
   }
 
   var con = self.getRandomConnection(exclude);
-  console.log('client con', con);
+  console.log('getting client con', con);
   if (!con) {
     console.log('here without the con');
-    console.log('is ready', !self.ready);
+    console.log('is ready', self.ready);
     if (!self.ready) self.wait('ready', self.subscribeAll.bind(self, exclude));
     return false;
   }
 
   // duplicate the random connection and make that our subscriber client
   var cli = self.subscribeClient = self.createClient(con.connection_options.port, con.connection_options.host);
+  console.log('we got the cli and ', typeof cli);
   cli.on('error', function(err) {
-    console.error(err);
+    console.log('we got a cli error', err);
     if (
       err.code === 'CONNECTION_BROKEN' ||
       err.code === 'UNCERTAIN_STATE' ||
@@ -608,7 +611,7 @@ RedisClustr.prototype.subscribeAll = function(exclude) {
       cli[cmd](Object.keys(self.subscriptions[cmd]));
     }
   }
-
+  console.log('returning cli', typeof cli);
   return cli;
 };
 
