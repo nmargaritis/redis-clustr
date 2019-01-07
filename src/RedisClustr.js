@@ -131,6 +131,11 @@ RedisClustr.prototype.getRandomConnection = function(exclude) {
   console.log('exclusion list', exclude);
   console.log('self connection list', typeof self.connections);
   var available = Object.keys(self.connections).filter(function(f) {
+    console.log('===================');
+    console.log(typeof self.connections[f]);
+    console.log('is ready', self.connections[f].ready);
+    console.log('exclude status', !exclude);
+    console.log('===================');
     return self.connections[f] && self.connections[f].ready && (!exclude || exclude.indexOf(f) === -1);
   });
   var randomIndex = Math.floor(Math.random() * available.length);
