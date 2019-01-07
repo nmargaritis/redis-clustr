@@ -132,9 +132,11 @@ RedisClustr.prototype.getRandomConnection = function(exclude) {
   console.log('self connection list', typeof self.connections);
   var available = Object.keys(self.connections).filter(function(f) {
     console.log('===================');
-    console.log(typeof self.connections[f]);
-    console.log('is ready', self.connections[f].ready);
-    console.log('exclude status', !exclude);
+    if (self.connections[f] !== null) {
+        console.log(typeof self.connections[f]);
+        console.log('is ready', self.connections[f].ready);
+        console.log('exclude status', !exclude);
+    }
     console.log('===================');
     return self.connections[f] && self.connections[f].ready && (!exclude || exclude.indexOf(f) === -1);
   });
@@ -258,6 +260,7 @@ RedisClustr.prototype.getSlots = function(cb) {
             if (++ready === seenClients.length) {
               self.fullReady = true;
               self.emit('fullReady');
+              console.log('Emmiting full ready bro2');
             }
           });
         }
