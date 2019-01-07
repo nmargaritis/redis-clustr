@@ -228,7 +228,7 @@ RedisClustr.prototype.getSlots = function(cb) {
           self.slots[j] = clients;
         }
       }
-
+      console.log('seen clients', seenClients);
       // quit now-unused clients
       for (var i in self.connections) {
         if (!self.connections[i]) continue;
